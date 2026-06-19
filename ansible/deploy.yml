@@ -1,0 +1,22 @@
+---
+- name: Deploy application
+  hosts: all
+  become: true
+
+  tasks:
+    - name: Run script
+      shell: ./deploy.sh             # VIOLATION: use script module, not shell
+
+    - name: Copy config
+      shell: cp /tmp/app.conf /etc/app/app.conf   # VIOLATION: use copy module
+
+    - name: Install packages
+      shell: apt-get install -y python3 nginx     # VIOLATION: use apt module
+
+    - name: Set API key
+      lineinfile:
+        path: /etc/app/config
+        line: "API_KEY=super_secret_api_key_here"  # VIOLATION: plaintext secret in task
+
+    - name: Start service
+      shell: systemctl start app     # VIOLATION: use service/systemd module
