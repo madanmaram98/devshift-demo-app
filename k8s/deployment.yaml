@@ -1,0 +1,24 @@
+apiVersion: apps/v1
+kind: Deployment
+metadata:
+  name: app
+  # VIOLATION: missing required DBG labels: owner, cost-centre, app.kubernetes.io/version
+spec:
+  replicas: 1
+  selector:
+    matchLabels:
+      app: app
+  template:
+    metadata:
+      labels:
+        app: app
+    spec:
+      containers:
+        - name: app
+          image: myapp:latest             # VIOLATION: :latest tag not allowed
+          # VIOLATION: no resource requests/limits defined
+          # VIOLATION: no livenessProbe or readinessProbe
+          # VIOLATION: no securityContext — container runs as root
+          env:
+            - name: DB_PASSWORD
+              value: "hardcoded_password" # VIOLATION: use secretKeyRef instead
